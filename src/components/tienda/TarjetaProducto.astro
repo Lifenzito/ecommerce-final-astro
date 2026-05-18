@@ -12,11 +12,11 @@ interface Props {
 
 const { id, nombre, precio, imagen, categoria } = Astro.props;
 
-// Formateamos el precio en formato de moneda
+// Formateamos el precio en pesos colombianos, sin decimales
 const precioFormateado = new Intl.NumberFormat("es-CO", {
   style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
+  currency: "COP",
+  maximumFractionDigits: 0,
 }).format(precio);
 ---
 

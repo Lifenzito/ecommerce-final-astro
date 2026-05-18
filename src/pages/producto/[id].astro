@@ -22,11 +22,11 @@ if (error || !producto) {
   return Astro.redirect("/");
 }
 
-// Formateamos el precio
+// Formateamos el precio en pesos colombianos, sin decimales
 const precioFormateado = new Intl.NumberFormat("es-CO", {
   style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
+  currency: "COP",
+  maximumFractionDigits: 0,
 }).format(producto.price);
 
 // Formateamos la fecha de creacion

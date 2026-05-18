@@ -240,7 +240,7 @@ export default function FormularioProducto({ productoId }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="precio" className="block text-sm font-medium text-gray-300 mb-2">
-                    Precio (USD) *
+                    Precio (COP) *
                   </label>
                   <input
                     id="precio"

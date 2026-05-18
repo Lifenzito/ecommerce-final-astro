@@ -56,12 +56,12 @@ export default function ListaProductos() {
     }
   }
 
-  // Formatear precio
+  // Formatear precio en pesos colombianos, sin decimales
   function formatearPrecio(precio: number): string {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
+      currency: "COP",
+      maximumFractionDigits: 0,
     }).format(precio);
   }
 
