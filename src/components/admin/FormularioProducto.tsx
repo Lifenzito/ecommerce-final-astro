@@ -157,16 +157,14 @@ export default function FormularioProducto({ productoId }: Props) {
     }
   }
 
-  // Categorias predefinidas para el selector
+  // Categorias oficiales de la tienda (mismas usadas en el catalogo publico)
   const categoriasPredefinidas = [
+    "Accesorios",
+    "Audio",
+    "Celulares",
     "Electronica",
-    "Ropa",
-    "Hogar",
-    "Deportes",
-    "Libros",
-    "Juguetes",
-    "Alimentos",
-    "Otro",
+    "Portátiles",
+    "Tablets",
   ];
 
   return (
