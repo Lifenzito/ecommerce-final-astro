@@ -21,5 +21,17 @@ export interface Product {
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
+// Detectamos si estamos en el navegador para poder usar localStorage
+const esNavegador = typeof window !== "undefined";
+
 // Creamos el cliente de Supabase que se reutiliza en toda la aplicacion
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    // Guardar sesion entre recargas y navegación
+    persistSession: true,
+    // Refrescar el token automaticamente cuando sea necesario
+    autoRefreshToken: true,
+    // En cliente usamos localStorage para persistir la sesión
+    storage: esNavegador ? window.localStorage : undefined,
+  },
+});

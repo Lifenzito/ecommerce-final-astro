@@ -1,14 +1,33 @@
 // Formulario de inicio de sesion para el panel de administracion
 // Usa Supabase Auth para autenticar al usuario con email y contrasena
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 
 export default function FormularioLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cargando, setCargando] = useState(false);
+  const [verificandoSesion, setVerificandoSesion] = useState(true);
   const [error, setError] = useState("");
+
+  // Si ya hay sesion activa, enviamos directo al panel admin
+  useEffect(() => {
+    void verificarSesionActiva();
+  }, []);
+
+  async function verificarSesionActiva() {
+    try {
+      const { data } = await supabase.auth.getSession();
+
+      if (data.session) {
+        window.location.href = "/admin";
+        return;
+      }
+    } finally {
+      setVerificandoSesion(false);
+    }
+  }
 
   // Manejar el envio del formulario
   async function handleSubmit(e: React.FormEvent) {
@@ -38,6 +57,12 @@ export default function FormularioLogin() {
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
+      {verificandoSesion ? (
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400 text-sm">Verificando sesion...</p>
+        </div>
+      ) : (
       <div className="w-full max-w-md bg-gray-900 rounded-lg border border-gray-800 p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Iniciar Sesion</h1>
         <p className="text-gray-400 text-center mb-8 text-sm">
@@ -94,6 +119,7 @@ export default function FormularioLogin() {
           </button>
         </form>
       </div>
+      )}
     </div>
   );
 }
