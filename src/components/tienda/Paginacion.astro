@@ -1,0 +1,73 @@
+---
+// Componente de paginacion para navegar entre paginas de productos
+// Construye los enlaces manteniendo los filtros actuales
+
+interface Props {
+  paginaActual: number;
+  totalPaginas: number;
+  busquedaActual?: string;
+  categoriaActual?: string;
+}
+
+const { paginaActual, totalPaginas, busquedaActual = "", categoriaActual = "" } = Astro.props;
+
+// Funcion auxiliar para construir la URL con los parametros actuales
+function construirUrl(pagina: number): string {
+  const params = new URLSearchParams();
+  if (busquedaActual) params.set("buscar", busquedaActual);
+  if (categoriaActual) params.set("categoria", categoriaActual);
+  if (pagina > 1) params.set("pagina", String(pagina));
+
+  const query = params.toString();
+  return query ? `/?${query}` : "/";
+}
+---
+
+{
+  totalPaginas > 1 && (
+    <nav class="flex items-center justify-center gap-2 mt-8">
+      {/* Boton anterior */}
+      {paginaActual > 1 ? (
+        <a
+          href={construirUrl(paginaActual - 1)}
+          class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+        >
+          Anterior
+        </a>
+      ) : (
+        <span class="px-4 py-2 bg-gray-800/50 text-gray-600 rounded-lg cursor-not-allowed">
+          Anterior
+        </span>
+      )}
+
+      {/* Numeros de pagina */}
+      {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((pagina) => (
+        <a
+          href={construirUrl(pagina)}
+          class:list={[
+            "px-4 py-2 rounded-lg transition-colors",
+            pagina === paginaActual
+              ? "bg-primary-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700",
+          ]}
+        >
+          {pagina}
+        </a>
+      ))}
+
+      {/* Boton siguiente */}
+      {paginaActual < totalPaginas ? (
+        <a
+          href={construirUrl(paginaActual + 1)}
+          class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+        >
+          Siguiente
+        </a>
+      ) : (
+        <span class="px-4 py-2 bg-gray-800/50 text-gray-600 rounded-lg cursor-not-allowed">
+          Siguiente
+        </span>
+      )}
+    </nav>
+  )
+}

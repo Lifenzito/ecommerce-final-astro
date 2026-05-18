@@ -1,0 +1,50 @@
+---
+// Layout para las paginas del panel de administracion
+// Este layout es mas simple porque el contenido interactivo lo manejan los componentes React
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{titulo} | Admin - TechStore</title>
+  </head>
+  <body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
+    <!-- Barra de navegacion del admin -->
+    <nav class="bg-gray-900 border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-6">
+            <a href="/admin" class="text-xl font-bold text-primary-400 hover:text-primary-300 transition-colors">
+              TechStore Admin
+            </a>
+            <a href="/admin" class="text-gray-300 hover:text-white transition-colors text-sm">
+              Productos
+            </a>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <a href="/" class="text-gray-400 hover:text-gray-200 transition-colors text-sm">
+              Ver tienda
+            </a>
+            <!-- El boton de cerrar sesion se maneja desde React -->
+            <div id="logout-container"></div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Contenido principal del admin -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      <slot />
+    </main>
+  </body>
+</html>

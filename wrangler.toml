@@ -1,0 +1,11 @@
+# Configuracion de Cloudflare Workers/Pages
+# Este archivo se usa cuando se despliega en Cloudflare
+
+name = "ecommerce-techstore"
+compatibility_date = "2024-11-01"
+
+# Las variables de entorno se configuran en el dashboard de Cloudflare Pages
+# No las ponemos aqui para no exponer las claves
+# En Cloudflare Pages > Settings > Environment Variables, agregar:
+#   PUBLIC_SUPABASE_URL = tu-url-de-supabase
+#   PUBLIC_SUPABASE_ANON_KEY = tu-clave-publica
