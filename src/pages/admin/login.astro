@@ -1,0 +1,14 @@
+---
+// Pagina de login del admin
+// Es una pagina estatica (prerender) porque toda la logica de autenticacion
+// se maneja en el cliente con el componente React FormularioLogin
+
+export const prerender = true;
+
+import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import FormularioLogin from "../../components/admin/FormularioLogin";
+---
+
+<LayoutAdmin titulo="Iniciar Sesion">
+  <FormularioLogin client:load />
+</LayoutAdmin>

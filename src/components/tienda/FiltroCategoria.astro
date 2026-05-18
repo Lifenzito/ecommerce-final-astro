@@ -1,0 +1,43 @@
+---
+// Componente para filtrar productos por categoria
+// Muestra botones con las categorias disponibles
+
+interface Props {
+  categorias: string[];
+  categoriaActual?: string;
+  busquedaActual?: string;
+}
+
+const { categorias, categoriaActual = "", busquedaActual = "" } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2">
+  <!-- Boton "Todas" para quitar el filtro -->
+  <a
+    href={busquedaActual ? `/?buscar=${busquedaActual}` : "/"}
+    class:list={[
+      "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+      !categoriaActual
+        ? "bg-primary-600 text-white"
+        : "bg-gray-800 text-gray-300 hover:bg-gray-700",
+    ]}
+  >
+    Todas
+  </a>
+
+  {
+    categorias.map((cat) => (
+      <a
+        href={`/?categoria=${encodeURIComponent(cat)}${busquedaActual ? `&buscar=${busquedaActual}` : ""}`}
+        class:list={[
+          "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+          categoriaActual === cat
+            ? "bg-primary-600 text-white"
+            : "bg-gray-800 text-gray-300 hover:bg-gray-700",
+        ]}
+      >
+        {cat}
+      </a>
+    ))
+  }
+</div>

@@ -1,0 +1,27 @@
+# dependencias
+node_modules/
+
+# build
+dist/
+.output/
+
+# variables de entorno
+.env
+.env.local
+.env.production
+
+# astro
+.astro/
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# cloudflare
+.wrangler/

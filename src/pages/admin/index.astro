@@ -1,0 +1,14 @@
+---
+// Pagina principal del admin: lista de productos
+// Es estatica (prerender) porque la lista se carga desde el cliente con React
+// El componente ListaProductos maneja todo: carga, eliminacion, etc.
+
+export const prerender = true;
+
+import LayoutAdmin from "../../layouts/LayoutAdmin.astro";
+import ListaProductos from "../../components/admin/ListaProductos";
+---
+
+<LayoutAdmin titulo="Panel de Administracion">
+  <ListaProductos client:load />
+</LayoutAdmin>

@@ -1,0 +1,14 @@
+---
+// Pagina para editar un producto existente
+// Aunque la pagina es SSR (necesitamos el ID de la URL),
+// la logica de edicion la maneja el componente React en el cliente
+
+import LayoutAdmin from "../../../../layouts/LayoutAdmin.astro";
+import FormularioProducto from "../../../../components/admin/FormularioProducto";
+
+const { id } = Astro.params;
+---
+
+<LayoutAdmin titulo="Editar Producto">
+  <FormularioProducto client:load productoId={id} />
+</LayoutAdmin>

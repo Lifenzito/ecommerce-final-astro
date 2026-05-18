@@ -1,0 +1,13 @@
+---
+// Pagina para crear un nuevo producto
+// Estatica con logica del cliente a traves del componente FormularioProducto
+
+export const prerender = true;
+
+import LayoutAdmin from "../../../layouts/LayoutAdmin.astro";
+import FormularioProducto from "../../../components/admin/FormularioProducto";
+---
+
+<LayoutAdmin titulo="Nuevo Producto">
+  <FormularioProducto client:load />
+</LayoutAdmin>

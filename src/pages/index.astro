@@ -1,0 +1,155 @@
+---
+// Pagina principal: Catalogo de productos
+// Esta pagina usa SSR (se renderiza en el servidor en cada peticion)
+// Soporta busqueda por nombre, filtro por categoria y paginacion
+
+import LayoutPublico from "../layouts/LayoutPublico.astro";
+import TarjetaProducto from "../components/tienda/TarjetaProducto.astro";
+import BarraBusqueda from "../components/tienda/BarraBusqueda.astro";
+import FiltroCategoria from "../components/tienda/FiltroCategoria.astro";
+import Paginacion from "../components/tienda/Paginacion.astro";
+import { supabase } from "../lib/supabase";
+
+// Leemos los parametros de la URL
+const url = new URL(Astro.request.url);
+const busqueda = url.searchParams.get("buscar") || "";
+const categoriaSeleccionada = url.searchParams.get("categoria") || "";
+const paginaActual = parseInt(url.searchParams.get("pagina") || "1");
+
+// Configuracion de paginacion
+const productosPorPagina = 8;
+const offset = (paginaActual - 1) * productosPorPagina;
+
+// Construimos la consulta base: solo productos activos
+let consulta = supabase
+  .from("products")
+  .select("*", { count: "exact" })
+  .eq("is_active", true)
+  .order("created_at", { ascending: false });
+
+// Aplicamos filtro de busqueda si existe
+if (busqueda) {
+  consulta = consulta.ilike("name", `%${busqueda}%`);
+}
+
+// Aplicamos filtro de categoria si existe
+if (categoriaSeleccionada) {
+  consulta = consulta.eq("category", categoriaSeleccionada);
+}
+
+// Aplicamos paginacion
+consulta = consulta.range(offset, offset + productosPorPagina - 1);
+
+// Ejecutamos la consulta
+const { data: productos, count, error } = await consulta;
+
+// Calculamos el total de paginas
+const totalProductos = count || 0;
+const totalPaginas = Math.ceil(totalProductos / productosPorPagina);
+
+// Obtenemos las categorias unicas para el filtro
+const { data: categoriasData } = await supabase
+  .from("products")
+  .select("category")
+  .eq("is_active", true)
+  .order("category");
+
+// Extraemos categorias unicas eliminando duplicados
+const categorias = [...new Set(categoriasData?.map((p) => p.category).filter(Boolean) || [])];
+---
+
+<LayoutPublico titulo="Catalogo">
+  <!-- Encabezado del catalogo -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">Catalogo de Productos</h1>
+    <p class="text-gray-400">Encuentra lo que necesitas en nuestra tienda</p>
+  </div>
+
+  <!-- Barra de busqueda -->
+  <div class="mb-6">
+    <BarraBusqueda valorActual={busqueda} categoriaActual={categoriaSeleccionada} />
+  </div>
+
+  <!-- Filtros de categoria -->
+  {
+    categorias.length > 0 && (
+      <div class="mb-8">
+        <h2 class="text-sm font-medium text-gray-400 mb-3">Categorias</h2>
+        <FiltroCategoria
+          categorias={categorias}
+          categoriaActual={categoriaSeleccionada}
+          busquedaActual={busqueda}
+        />
+      </div>
+    )
+  }
+
+  <!-- Indicador de resultados -->
+  {
+    (busqueda || categoriaSeleccionada) && (
+      <div class="mb-6 flex items-center gap-2 text-sm text-gray-400">
+        <span>
+          {totalProductos} resultado{totalProductos !== 1 ? "s" : ""}
+        </span>
+        {busqueda && <span>para "{busqueda}"</span>}
+        {categoriaSeleccionada && <span>en {categoriaSeleccionada}</span>}
+        <a href="/" class="text-primary-400 hover:text-primary-300 ml-2">
+          Limpiar filtros
+        </a>
+      </div>
+    )
+  }
+
+  <!-- Error de carga -->
+  {
+    error && (
+      <div class="bg-red-900/30 border border-red-800 text-red-300 px-4 py-3 rounded-lg mb-6">
+        Error al cargar los productos. Intenta recargar la pagina.
+      </div>
+    )
+  }
+
+  <!-- Grid de productos -->
+  {
+    productos && productos.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {productos.map((producto) => (
+          <TarjetaProducto
+            id={producto.id}
+            nombre={producto.name}
+            precio={producto.price}
+            imagen={producto.image_url}
+            categoria={producto.category}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-16 text-gray-400">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-16 h-16 mx-auto mb-4 text-gray-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+          />
+        </svg>
+        <p class="text-lg mb-2">No se encontraron productos</p>
+        <p class="text-sm">Intenta con otros terminos de busqueda o categoria</p>
+      </div>
+    )
+  }
+
+  <!-- Paginacion -->
+  <Paginacion
+    paginaActual={paginaActual}
+    totalPaginas={totalPaginas}
+    busquedaActual={busqueda}
+    categoriaActual={categoriaSeleccionada}
+  />
+</LayoutPublico>

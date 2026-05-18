@@ -1,0 +1,14 @@
+/* Estilos globales del proyecto */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Aplicamos el tema oscuro a todo el documento */
+html {
+  @apply bg-gray-950 text-gray-100;
+}
+
+/* Estilos base para mejorar la legibilidad */
+body {
+  @apply min-h-screen antialiased;
+}
