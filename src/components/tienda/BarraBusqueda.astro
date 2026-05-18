@@ -4,13 +4,15 @@
 
 interface Props {
   valorActual?: string;
+  categoriaActual?: string;
 }
 
-const { valorActual = "" } = Astro.props;
+const { valorActual = "", categoriaActual = "" } = Astro.props;
 ---
 
 <form method="GET" action="/" class="w-full max-w-lg">
-  <!-- Mantenemos los parametros existentes como campos ocultos -->
+  <!-- Mantenemos la categoria activa como campo oculto para no perder el filtro al buscar -->
+  {categoriaActual && <input type="hidden" name="categoria" value={categoriaActual} />}
   <div class="relative">
     <input
       type="text"

@@ -67,7 +67,7 @@ const categorias = [...new Set(categoriasData?.map((p) => p.category).filter(Boo
 
   <!-- Barra de busqueda -->
   <div class="mb-6">
-    <BarraBusqueda valorActual={busqueda} />
+    <BarraBusqueda valorActual={busqueda} categoriaActual={categoriaSeleccionada} />
   </div>
 
   <!-- Filtros de categoria -->

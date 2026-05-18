@@ -3,8 +3,27 @@
 // Nota: necesitas tener las variables de entorno configuradas en .env
 
 import { createClient } from "@supabase/supabase-js";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
-// Leemos las variables de entorno directamente del proceso
+// Cargamos las variables de entorno desde el archivo .env manualmente
+// porque tsx no las carga automaticamente
+try {
+  const envPath = resolve(process.cwd(), ".env");
+  const envContent = readFileSync(envPath, "utf-8");
+  for (const line of envContent.split("\n")) {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith("#")) {
+      const [key, ...rest] = trimmed.split("=");
+      if (key && rest.length > 0) {
+        process.env[key.trim()] = rest.join("=").trim();
+      }
+    }
+  }
+} catch {
+  console.error("No se encontro el archivo .env en la raiz del proyecto.");
+}
+
 const supabaseUrl = process.env.PUBLIC_SUPABASE_URL || "";
 const supabaseKey = process.env.PUBLIC_SUPABASE_ANON_KEY || "";
 
